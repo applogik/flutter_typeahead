@@ -227,6 +227,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -234,7 +235,6 @@ import 'package:flutter_typeahead/src/keyboard_suggestion_selection_notifier.dar
 import 'package:flutter_typeahead/src/should_refresh_suggestion_focus_index_notifier.dart';
 
 import 'typedef.dart';
-import 'utils.dart';
 
 /// A [FormField](https://docs.flutter.io/flutter/widgets/FormField-class.html)
 /// implementation of [TypeAheadField], that allows the value to be saved,
@@ -250,7 +250,7 @@ class TypeAheadFormField<T> extends FormField<String> {
   final TextFieldConfiguration textFieldConfiguration;
 
   // Adds a callback for resetting the form field
-  void Function()? onReset;
+  final Function()? onReset;
 
   /// Creates a [TypeAheadFormField]
   TypeAheadFormField(
@@ -408,10 +408,10 @@ class _TypeAheadFormFieldState<T> extends FormFieldState<String> {
   void reset() {
     super.reset();
     setState(() {
-      _effectiveController!.text = widget.initialValue!;
-      if (widget.onReset != null) {
-        widget.onReset!();
+      if (_effectiveController != null && widget.initialValue != null) {
+        _effectiveController!.text = widget.initialValue!;
       }
+      widget.onReset?.call();
     });
   }
 
@@ -778,8 +778,9 @@ class _TypeAheadFieldState<T> extends State<TypeAheadField<T>>
   ScrollPosition? _scrollPosition;
 
   // Keyboard detection
-  final Stream<bool>? _keyboardVisibility =
-      (supportedPlatform) ? KeyboardVisibilityController().onChange : null;
+  final Stream<bool>? _keyboardVisibility = kIsWeb
+      ? Stream<bool>.value(false)
+      : KeyboardVisibilityController().onChange;
   late StreamSubscription<bool>? _keyboardVisibilitySubscription;
 
   bool _areSuggestionsFocused = false;

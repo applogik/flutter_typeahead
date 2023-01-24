@@ -18,11 +18,11 @@ import 'dart:core';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'typedef.dart';
-import 'utils.dart';
 
 // Cupertino BoxDecoration taken from flutter/lib/src/cupertino/text_field.dart
 const BorderSide _kDefaultRoundedBorderSide = BorderSide(
@@ -563,8 +563,9 @@ class _CupertinoTypeAheadFieldState<T> extends State<CupertinoTypeAheadField<T>>
   ScrollPosition? _scrollPosition;
 
   // Keyboard detection
-  final Stream<bool>? _keyboardVisibility =
-      (supportedPlatform) ? KeyboardVisibilityController().onChange : null;
+  final Stream<bool>? _keyboardVisibility = kIsWeb
+      ? Stream<bool>.value(false)
+      : KeyboardVisibilityController().onChange;
   late StreamSubscription<bool>? _keyboardVisibilitySubscription;
 
   @override
