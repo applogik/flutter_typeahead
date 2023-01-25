@@ -267,7 +267,7 @@ class TypeAheadFormField<T> extends FormField<String> {
     this.onReset,
     FormFieldValidator<String>? validator,
     ErrorBuilder? errorBuilder,
-    WidgetBuilder? noItemsFoundBuilder,
+    NoItemsFoundBuilder? noItemsFoundBuilder,
     WidgetBuilder? loadingBuilder,
     void Function(bool)? onSuggestionsBoxToggle,
     Duration debounceDuration = const Duration(milliseconds: 300),
@@ -547,7 +547,7 @@ class TypeAheadField<T> extends StatefulWidget {
   /// ```
   ///
   /// If not specified, a simple text is shown
-  final WidgetBuilder? noItemsFoundBuilder;
+  final NoItemsFoundBuilder? noItemsFoundBuilder;
 
   /// Called when [suggestionsCallback] throws an exception.
   ///
@@ -1097,7 +1097,7 @@ class _SuggestionsList<T> extends StatefulWidget {
   final SuggestionsBoxDecoration? decoration;
   final Duration? debounceDuration;
   final WidgetBuilder? loadingBuilder;
-  final WidgetBuilder? noItemsFoundBuilder;
+  final NoItemsFoundBuilder? noItemsFoundBuilder;
   final ErrorBuilder? errorBuilder;
   final AnimationTransitionBuilder? transitionBuilder;
   final Duration? animationDuration;
@@ -1420,7 +1420,7 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
 
   Widget createErrorWidget() {
     return widget.errorBuilder != null
-        ? widget.errorBuilder!(context, this._error)
+        ? widget.errorBuilder!(context, this._error, _lastTextValue)
         : Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -1432,7 +1432,7 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
 
   Widget createNoItemsFoundWidget() {
     return widget.noItemsFoundBuilder != null
-        ? widget.noItemsFoundBuilder!(context)
+        ? widget.noItemsFoundBuilder!(context, _lastTextValue!)
         : Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(

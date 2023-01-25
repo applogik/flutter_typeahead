@@ -1068,7 +1068,7 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
 
   Widget createErrorWidget() {
     return widget.errorBuilder != null
-        ? widget.errorBuilder!(context, this._error)
+        ? widget.errorBuilder!(context, this._error, _lastTextValue)
         : Container(
             decoration: BoxDecoration(
               color: CupertinoColors.white,

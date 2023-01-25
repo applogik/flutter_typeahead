@@ -51,7 +51,7 @@ class TestPageState extends State<TestPage> {
                   else
                     return [];
                 },
-                noItemsFoundBuilder: (context) => const SizedBox(),
+                noItemsFoundBuilder: (context, query) => const SizedBox(),
                 itemBuilder: (context, String suggestion) {
                   return ListTile(
                     title: Text(suggestion),
