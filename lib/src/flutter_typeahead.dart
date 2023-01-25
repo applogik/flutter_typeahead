@@ -924,8 +924,12 @@ class _TypeAheadFieldState<T> extends State<TypeAheadField<T>>
   void _initOverlayEntry() {
     this._suggestionsBox!._overlayEntry = OverlayEntry(builder: (context) {
       void giveTextFieldFocus() {
-        _effectiveFocusNode?.requestFocus();
-        _areSuggestionsFocused = false;
+        try {
+          _effectiveFocusNode?.requestFocus();
+          _areSuggestionsFocused = false;
+        } catch (_) {
+          // ignore
+        }
       }
 
       void onSuggestionFocus() {
@@ -1456,10 +1460,10 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
           focusNode: focusNode,
           child: widget.itemBuilder!(context, suggestion),
           onTap: () {
+            widget.onSuggestionSelected!(suggestion);
+
             // * we give the focus back to the text field
             widget.giveTextFieldFocus();
-
-            widget.onSuggestionSelected!(suggestion);
           },
         );
       }),
