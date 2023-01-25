@@ -902,14 +902,13 @@ class _TypeAheadFieldState<T> extends State<TypeAheadField<T>>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ScrollableState? scrollableState = Scrollable.of(context);
-    if (scrollableState != null) {
-      // The TypeAheadField is inside a scrollable widget
-      _scrollPosition = scrollableState.position;
+    ScrollableState scrollableState = Scrollable.of(context);
 
-      _scrollPosition!.removeListener(_scrollResizeListener);
-      _scrollPosition!.isScrollingNotifier.addListener(_scrollResizeListener);
-    }
+    // The TypeAheadField is inside a scrollable widget
+    _scrollPosition = scrollableState.position;
+
+    _scrollPosition!.removeListener(_scrollResizeListener);
+    _scrollPosition!.isScrollingNotifier.addListener(_scrollResizeListener);
   }
 
   void _scrollResizeListener() {
@@ -1426,7 +1425,7 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Error: ${this._error}',
-              style: TextStyle(color: Theme.of(context).errorColor),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           );
   }
@@ -1846,7 +1845,7 @@ class _SuggestionsBox {
     if (this.isOpened) return;
     assert(this._overlayEntry != null);
     resize();
-    Overlay.of(context)!.insert(this._overlayEntry!);
+    Overlay.of(context).insert(this._overlayEntry!);
     this.isOpened = true;
   }
 
