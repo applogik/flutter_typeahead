@@ -294,6 +294,7 @@ class TypeAheadFormField<T> extends FormField<String> {
     bool hideKeyboard = false,
     int minCharsForSuggestions = 0,
     bool hideKeyboardOnDrag = false,
+    bool giveTextFieldFocusBack = true,
   })  : assert(
             initialValue == null || textFieldConfiguration.controller == null),
         assert(minCharsForSuggestions >= 0),
@@ -330,6 +331,7 @@ class TypeAheadFormField<T> extends FormField<String> {
                 ),
                 suggestionsBoxVerticalOffset: suggestionsBoxVerticalOffset,
                 onSuggestionSelected: onSuggestionSelected,
+                giveTextFieldFocusBack: giveTextFieldFocusBack,
                 onSuggestionsBoxToggle: onSuggestionsBoxToggle,
                 itemBuilder: itemBuilder,
                 suggestionsCallback: suggestionsCallback,
@@ -709,6 +711,7 @@ class TypeAheadField<T> extends StatefulWidget {
   // Adds a callback for the suggestion box opening or closing
   final void Function(bool)? onSuggestionsBoxToggle;
 
+  // Do not focus textfield after selecting a suggestion
   final bool giveTextFieldFocusBack;
 
   /// Creates a [TypeAheadField]
