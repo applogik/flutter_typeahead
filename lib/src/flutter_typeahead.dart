@@ -709,6 +709,8 @@ class TypeAheadField<T> extends StatefulWidget {
   // Adds a callback for the suggestion box opening or closing
   final void Function(bool)? onSuggestionsBoxToggle;
 
+  final bool giveTextFieldFocusBack;
+
   /// Creates a [TypeAheadField]
   TypeAheadField({
     Key? key,
@@ -741,6 +743,7 @@ class TypeAheadField<T> extends StatefulWidget {
     this.minCharsForSuggestions = 0,
     this.onSuggestionsBoxToggle,
     this.hideKeyboardOnDrag = false,
+    this.giveTextFieldFocusBack = true,
   })  : assert(animationStart >= 0.0 && animationStart <= 1.0),
         assert(
             direction == AxisDirection.down || direction == AxisDirection.up),
@@ -970,7 +973,8 @@ class _TypeAheadFieldState<T> extends State<TypeAheadField<T>>
               _keyboardSuggestionSelectionNotifier,
           shouldRefreshSuggestionFocusIndexNotifier:
               _shouldRefreshSuggestionsFocusIndex,
-          giveTextFieldFocus: giveTextFieldFocus,
+          giveTextFieldFocus:
+              widget.giveTextFieldFocusBack ? giveTextFieldFocus : null,
           onSuggestionFocus: onSuggestionFocus,
           onKeyEvent: _onKeyEvent,
           hideKeyboardOnDrag: widget.hideKeyboardOnDrag);
@@ -1105,7 +1109,7 @@ class _SuggestionsList<T> extends StatefulWidget {
   final KeyboardSuggestionSelectionNotifier keyboardSuggestionSelectionNotifier;
   final ShouldRefreshSuggestionFocusIndexNotifier
       shouldRefreshSuggestionFocusIndexNotifier;
-  final VoidCallback giveTextFieldFocus;
+  final VoidCallback? giveTextFieldFocus;
   final VoidCallback onSuggestionFocus;
   final KeyEventResult Function(FocusNode _, RawKeyEvent event) onKeyEvent;
   final bool hideKeyboardOnDrag;
@@ -1132,9 +1136,9 @@ class _SuggestionsList<T> extends StatefulWidget {
     this.hideOnError,
     this.keepSuggestionsOnLoading,
     this.minCharsForSuggestions,
+    this.giveTextFieldFocus,
     required this.keyboardSuggestionSelectionNotifier,
     required this.shouldRefreshSuggestionFocusIndexNotifier,
-    required this.giveTextFieldFocus,
     required this.onSuggestionFocus,
     required this.onKeyEvent,
     required this.hideKeyboardOnDrag,
@@ -1245,7 +1249,7 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
         focusNode.requestFocus();
         widget.onSuggestionFocus();
       } else {
-        widget.giveTextFieldFocus();
+        widget.giveTextFieldFocus?.call();
       }
     });
 
@@ -1463,7 +1467,7 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
             widget.onSuggestionSelected!(suggestion);
 
             // * we give the focus back to the text field
-            widget.giveTextFieldFocus();
+            widget.giveTextFieldFocus?.call();
           },
         );
       }),
