@@ -958,9 +958,13 @@ class _TypeAheadFieldState<T> extends State<TypeAheadField<T>>
           animationStart: widget.animationStart,
           getImmediateSuggestions: widget.getImmediateSuggestions,
           onSuggestionSelected: (T selection) {
-            if (!widget.keepSuggestionsOnSuggestionSelected) {
-              this._effectiveFocusNode!.unfocus();
-              this._suggestionsBox!.close();
+            try {
+              if (!widget.keepSuggestionsOnSuggestionSelected) {
+                this._effectiveFocusNode!.unfocus();
+                this._suggestionsBox!.close();
+              }
+            } catch (_) {
+              // ignore
             }
             widget.onSuggestionSelected(selection);
           },
@@ -1466,10 +1470,16 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
           focusNode: focusNode,
           child: widget.itemBuilder!(context, suggestion),
           onTap: () {
-            widget.onSuggestionSelected!(suggestion);
-
             // * we give the focus back to the text field
             widget.giveTextFieldFocus?.call();
+            
+            if (kIsWeb) {
+              Future.delayed(Duration(milliseconds: 250), () {
+                widget.onSuggestionSelected!(suggestion);
+              });
+            } else {
+              widget.onSuggestionSelected!(suggestion);
+            }
           },
         );
       }),
