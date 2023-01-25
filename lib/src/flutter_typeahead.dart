@@ -1462,24 +1462,12 @@ class _SuggestionsListState<T> extends State<_SuggestionsList<T>>
           : widget.suggestionsBox!.autoFlipListDirection,
       children: List.generate(this._suggestions!.length, (index) {
         final suggestion = _suggestions!.elementAt(index);
-        final focusNode = _focusNodes[index];
 
         return InkWell(
           key: TestKeys.getSuggestionKey(index),
-          focusColor: Theme.of(context).hoverColor,
-          focusNode: focusNode,
           child: widget.itemBuilder!(context, suggestion),
           onTap: () {
-            // * we give the focus back to the text field
-            widget.giveTextFieldFocus?.call();
-            
-            if (kIsWeb) {
-              Future.delayed(Duration(milliseconds: 250), () {
-                widget.onSuggestionSelected!(suggestion);
-              });
-            } else {
-              widget.onSuggestionSelected!(suggestion);
-            }
+            widget.onSuggestionSelected!(suggestion);
           },
         );
       }),
